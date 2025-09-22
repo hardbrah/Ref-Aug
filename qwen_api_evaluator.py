@@ -52,14 +52,19 @@ def call_qwen_api(prompt: str) -> str:
                 # 关键：delta.content可能为None，使用`or ""`避免拼接时出错。
                 content = chunk.choices[0].delta.content or ""
                 content_parts.append(content)
-            # elif chunk.usage:
-            #     # 请求结束，打印Token用量。
-            #     print("\n--- 请求用量 ---")
-            #     print(f"输入 Tokens: {chunk.usage.prompt_tokens}")
-            #     print(f"输出 Tokens: {chunk.usage.completion_tokens}")
-            #     print(f"总计 Tokens: {chunk.usage.total_tokens}")
+            elif chunk.usage:
+                # 请求结束，打印Token用量。
+                print("\n--- 请求用量 ---")
+                print(f"输入 Tokens: {chunk.usage.prompt_tokens}")
+                print(f"输出 Tokens: {chunk.usage.completion_tokens}")
+                print(f"总计 Tokens: {chunk.usage.total_tokens}")
         full_response = "".join(content_parts)
-        return full_response
+        return (
+            full_response,
+            chunk.usage.prompt_tokens,
+            chunk.usage.completion_tokens,
+            chunk.usage.total_tokens,
+        )
     except APIError as e:
         print(f"API 请求失败: {e}")
     except Exception as e:
@@ -83,7 +88,7 @@ def process_data(input_file: str, output_file: str):
 
         # 调用API获取响应
         print("调用API中...")
-        response = call_qwen_api(prompt)
+        response, prompt_tokens, completion_tokens, total_tokens = call_qwen_api(prompt)
 
         # 提取答案并评估正确性
         print("评估结果中...")
@@ -94,6 +99,9 @@ def process_data(input_file: str, output_file: str):
         result = {
             "prompt_id": idx,
             "question_id": item.get("question_id"),
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "total_tokens": total_tokens,
             "thought_process_id_runIndex": item.get("thought_process_id_runIndex"),
             "prompt": prompt,
             "ground_truth": ground_truth,
