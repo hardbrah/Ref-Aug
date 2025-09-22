@@ -115,9 +115,4 @@ if __name__ == "__main__":
     input_file = r"cartesian_product_result.json"
     output_file = r"data\qwen_api_results.json"
 
-    # process_data(input_file, output_file)
-    for i in range(3):
-        response = "### Final Answer\n\n$$\n\\boxed{70}\n$$"
-        ground_truth = "70"
-        extraction_result = extract_answer(response, ground_truth, "math_verify")
-        print(extraction_result)
+    process_data(input_file, output_file)
