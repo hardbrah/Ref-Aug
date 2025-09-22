@@ -1,0 +1,4 @@
+处理文件: qwen3-4b-thinking/code_evaluation_results_20250914_001405/eval_aime25_FLASH_ATTN_20250915_182423.json
+总问题数: 30
+没有正确回复的问题数: 3
+没有正确回复的问题ID: 12, 14, 29

@@ -1,0 +1,60 @@
+{
+  "datasets": {
+    "aime24": {
+      "type": "json",
+      "data_path": "aime24/aime24.json",
+      "answer_format": "numeric",
+      "extract_method": "math_verify",
+      "description": "AIME 2024 数学竞赛题目"
+    },
+    "aime25": {
+      "type": "json",
+      "data_path": "aime25/aime25.json",
+      "answer_format": "numeric",
+      "extract_method": "math_verify",
+      "description": "AIME 2025 数学竞赛题目"
+    },
+    "gpqa": {
+      "type": "csv",
+      "data_path": "gpqa/gpqa_diamond.csv",
+      "answer_format": "mcq",
+      "extract_method": "boxed_letter",
+      "default_shuffle_seed": 42,
+      "csv_columns": {
+        "question": "Question",
+        "correct_answer": "Correct Answer",
+        "incorrect_answers": ["Incorrect Answer 1", "Incorrect Answer 2", "Incorrect Answer 3"],
+        "subdomain": "Subdomain"
+      },
+      "description": "GPQA Diamond 科学推理选择题"
+    },
+    "humaneval": {
+      "type": "jsonl",
+      "data_path": "humaneval/HumanEval.jsonl",
+      "answer_format": "code",
+      "extract_method": "code_execution",
+      "description": "HumanEval Python 编程题目"
+    },
+    "mbpp": {
+      "type": "jsonl",
+      "data_path": "mbpp/mbpp.jsonl",
+      "answer_format": "code",
+      "extract_method": "code_execution",
+      "description": "MBPP Python 编程题目"
+    },
+    "livecodebench_v5": {
+      "type": "jsonl",
+      "data_path": "livecodebench_v5/test5.jsonl",
+      "answer_format": "code",
+      "extract_method": "code_execution",
+      "description": "LiveCodeBench v5 编程竞赛题目"
+    },
+    "aider": {
+      "type": "conversation",
+      "data_path": "aider/aider.jsonl",
+      "answer_format": "text",
+      "extract_method": "direct_text",
+      "description": "Aider Proxy 对话数据集"
+    }
+  }
+}
