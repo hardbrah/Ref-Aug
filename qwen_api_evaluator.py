@@ -31,7 +31,7 @@ def call_qwen_api(prompt: str) -> str:
     )
     try:  # 发起流式请求
         completion = client.chat.completions.create(
-            model="qwen3-4b",  # 可以根据需要更改模型
+            model="qwen3-next-80b-a3b-instruct",  # 可以根据需要更改模型
             messages=[
                 {"role": "user", "content": prompt},
             ],
@@ -79,48 +79,55 @@ def process_data(input_file: str, output_file: str):
 
     results = []
     # 处理每个prompt
-    for idx, item in enumerate(data):
-        # for idx, item in enumerate(tqdm(data, desc="处理进度")):
-        print(f"\n处理第 {idx + 1} 项...")
+    try:
+        for idx, item in enumerate(data):
+            # for idx, item in enumerate(tqdm(data, desc="处理进度")):
+            print(f"\n处理第 {idx + 1} 项...")
 
-        prompt = item["prompt"]
-        ground_truth = item["answer"]
+            prompt = item["prompt"]
+            ground_truth = item["answer"]
 
-        # 调用API获取响应
-        print("调用API中...")
-        response, prompt_tokens, completion_tokens, total_tokens = call_qwen_api(prompt)
+            # 调用API获取响应
+            print("调用API中...")
+            response, prompt_tokens, completion_tokens, total_tokens = call_qwen_api(prompt)
 
-        # 提取答案并评估正确性
-        print("评估结果中...")
-        # 假设使用math_verify方法，可以根据实际情况调整
-        extraction_result = extract_answer(response, ground_truth, "math_verify")
+            # 提取答案并评估正确性
+            print("评估结果中...")
+            # 假设使用math_verify方法，可以根据实际情况调整
+            extraction_result = extract_answer(response, ground_truth, "math_verify")
 
-        # 构建结果
-        result = {
-            "prompt_id": idx,
-            "question_id": item.get("question_id"),
-            "prompt_tokens": prompt_tokens,
-            "completion_tokens": completion_tokens,
-            "total_tokens": total_tokens,
-            "thought_process_id_runIndex": item.get("thought_process_id_runIndex"),
-            "prompt": prompt,
-            "ground_truth": ground_truth,
-            "generated_text": response,
-            "extracted_answer": extraction_result.get("extracted_answer"),
-            "is_correct": extraction_result.get("is_correct"),
-            "extraction_error": extraction_result.get("extraction_error"),
-        }
-        results.append(result)
+            # 构建结果
+            result = {
+                "prompt_id": idx,
+                "question_id": item.get("question_id"),
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
+                "total_tokens": total_tokens,
+                "thought_process_id_runIndex": item.get("thought_process_id_runIndex"),
+                "prompt": prompt,
+                "ground_truth": ground_truth,
+                "generated_text": response,
+                "extracted_answer": extraction_result.get("extracted_answer"),
+                "is_correct": extraction_result.get("is_correct"),
+                "extraction_error": extraction_result.get("extraction_error"),
+            }
+            results.append(result)
+
+    except Exception as e:
+        print(f"prompt处理失败: {e}")
+        traceback.print_exc()
+
 
     # 保存结果
-    with open(output_file, "a", encoding="utf-8") as f:
-        json.dump(results, f, ensure_ascii=False, indent=2)
+    finally:
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(results, f, ensure_ascii=False, indent=2)
 
     print(f"\n处理完成，共处理 {len(results)} 项，结果已保存至 {output_file}")
 
 
 if __name__ == "__main__":
     input_file = r"cartesian_product_result.json"
-    output_file = r"data\qwen_api_results.json"
+    output_file = r"data/qwen_api_results.json"
 
     process_data(input_file, output_file)

@@ -2,8 +2,8 @@ import json
 import os
 
 # 定义文件路径
-aime25_responses_path = r"data\sampled_aime25_responses.json"
-aime24_questions_path = r"data\aime24\aime24.json"
+aime25_responses_path = r"data/sampled_aime25_responses.json"
+aime24_questions_path = r"data/aime24/aime24.json"
 output_path = r"cartesian_product_result.json"
 
 
